@@ -197,9 +197,8 @@ export default class GameScene extends Phaser.Scene {
     }
     Phaser.Utils.Array.Shuffle(floorPositions);
     
-    // Enemy sprite types available from SpriteGenerator
-    const enemyTypes = ['ochre_jelly', 'brawny_ogre', 'crimson_slaad', 'stone_troll', 
-                        'crushing_cyclops', 'blinded_grimlock', 'death_slime', 'fungal_myconid'];
+    // Enemy sprite types available (4 types cycling)
+    const enemyTypes = ['ochre_jelly', 'death_slime', 'blinded_grimlock', 'fungal_myconid'];
     
     for (let i = 0; i < Math.min(n, floorPositions.length); i++) {
       const tile = floorPositions[i];
@@ -208,11 +207,10 @@ export default class GameScene extends Phaser.Scene {
       // skip if too close
       if (Phaser.Math.Distance.Between(px, py, this.player.x, this.player.y) < this.displayTile * 2) continue;
 
-      // Use random enemy type, fallback to 'box' if no sprites loaded
+      // Use cycling enemy type, fallback to 'box' if sprite not loaded
       const enemyType = enemyTypes[i % enemyTypes.length];
       const charTexture = this.textures.exists(enemyType) ? enemyType : 'box';
-      const charFrame = this.textures.exists(enemyType) ? 0 : 0;
-      const e = this.physics.add.sprite(px, py, charTexture, charFrame).setScale(this.scaleFactor);
+      const e = this.physics.add.sprite(px, py, charTexture, 0).setScale(this.scaleFactor);
       e.body.setSize(14, 14);
       e.setCollideWorldBounds(true);
       // Balance: slightly tougher enemies

@@ -1,5 +1,3 @@
-import SpriteGenerator from '../utils/SpriteGenerator.js';
-
 export default class PreloadScene extends Phaser.Scene {
   constructor() {
     super('PreloadScene');
@@ -23,7 +21,19 @@ export default class PreloadScene extends Phaser.Scene {
     // Load game assets
     this.load.image('tiles', 'assets/tiles/dungeon.png');
     
-    // Character spritesheet (16x16 frames)
+    // Character sprites (PNG individual files)
+    this.load.image('elf_bladedancer', 'assets/sprites/characters/ElfBladedancer.png');
+    this.load.image('elf_enchanter', 'assets/sprites/characters/BoisterousYouth.png');
+    this.load.image('merfolk_scout', 'assets/sprites/characters/MerfolkAquamancer.png');
+    this.load.image('adventurer', 'assets/sprites/characters/AdventurousAdolescent.png');
+    
+    // Enemy sprites (PNG individual files)
+    this.load.image('ochre_jelly', 'assets/sprites/enemy/OchreJelly.png');
+    this.load.image('death_slime', 'assets/sprites/enemy/DeathSlime.png');
+    this.load.image('blinded_grimlock', 'assets/sprites/enemy/BloodshotEye.png');
+    this.load.image('fungal_myconid', 'assets/sprites/enemy/ShriekerMushroom.png');
+    
+    // Legacy spritesheet load (fallback) - may not exist
     this.load.spritesheet('chars', 'assets/sprites/characters.png', { 
       frameWidth: 16, 
       frameHeight: 16,
@@ -84,19 +94,12 @@ export default class PreloadScene extends Phaser.Scene {
     });
   }
   create() {
-    // Generate placeholder spritesheets for testing
-    // Will be replaced with real assets later
-    try {
-      SpriteGenerator.initializePlaceholderSprites(this);
-      console.log('✓ Placeholder sprites generated successfully');
-    } catch (e) {
-      console.error('Error generating sprites:', e);
-    }
-    
     // Create basic animations
+    // For PNG sprite images, we treat them as single-frame sprites
+    // so animations will use the same frame for idle and walk
     try {
       // Use elf_bladedancer as default player sprite for animations
-      // Idle animations (single frame each)
+      // Since PNG images are single frames, idle and walk use same frame
       this.anims.create({ 
         key: 'player_idle_down', 
         frames: [{ key: 'elf_bladedancer', frame: 0 }], 
@@ -104,45 +107,45 @@ export default class PreloadScene extends Phaser.Scene {
       });
       this.anims.create({ 
         key: 'player_idle_left', 
-        frames: [{ key: 'elf_bladedancer', frame: 1 }], 
+        frames: [{ key: 'elf_bladedancer', frame: 0 }], 
         frameRate: 1 
       });
       this.anims.create({ 
         key: 'player_idle_right', 
-        frames: [{ key: 'elf_bladedancer', frame: 2 }], 
+        frames: [{ key: 'elf_bladedancer', frame: 0 }], 
         frameRate: 1 
       });
       this.anims.create({ 
         key: 'player_idle_up', 
-        frames: [{ key: 'elf_bladedancer', frame: 3 }], 
+        frames: [{ key: 'elf_bladedancer', frame: 0 }], 
         frameRate: 1 
       });
       
-      // Walk animations (frames 4-7)
+      // Walk animations (same as idle since single PNG frame per sprite)
       this.anims.create({
         key: 'player_walk_down',
-        frames: this.anims.generateFrameNumbers('elf_bladedancer', { start: 4, end: 7 }),
+        frames: [{ key: 'elf_bladedancer', frame: 0 }],
         frameRate: 8,
         repeat: -1
       });
       
       this.anims.create({
         key: 'player_walk_left',
-        frames: this.anims.generateFrameNumbers('elf_bladedancer', { start: 4, end: 7 }),
+        frames: [{ key: 'elf_bladedancer', frame: 0 }],
         frameRate: 8,
         repeat: -1
       });
       
       this.anims.create({
         key: 'player_walk_right',
-        frames: this.anims.generateFrameNumbers('elf_bladedancer', { start: 4, end: 7 }),
+        frames: [{ key: 'elf_bladedancer', frame: 0 }],
         frameRate: 8,
         repeat: -1
       });
       
       this.anims.create({
         key: 'player_walk_up',
-        frames: this.anims.generateFrameNumbers('elf_bladedancer', { start: 4, end: 7 }),
+        frames: [{ key: 'elf_bladedancer', frame: 0 }],
         frameRate: 8,
         repeat: -1
       });
