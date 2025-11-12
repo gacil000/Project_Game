@@ -199,15 +199,44 @@ export default class InputController {
     // Hover effects
     button.on('pointerover', () => {
       button.setFillStyle(0x66aacc, 0.9);
-      text.setScale(1.1);
+      this.scene.tweens.add({
+        targets: text,
+        scale: 1.1,
+        duration: 150,
+        ease: 'Quad.easeOut'
+      });
     });
     
     button.on('pointerout', () => {
       button.setFillStyle(0x4488aa, 0.8);
-      text.setScale(1);
+      this.scene.tweens.add({
+        targets: text,
+        scale: 1,
+        duration: 150,
+        ease: 'Quad.easeOut'
+      });
     });
     
-    button.on('pointerdown', callback);
+    // Press animation - scale down and change color
+    button.on('pointerdown', () => {
+      this.scene.tweens.add({
+        targets: button,
+        scaleX: 0.85,
+        scaleY: 0.85,
+        duration: 100,
+        ease: 'Quad.easeIn',
+        yoyo: true,
+        onComplete: () => {
+          button.setScale(1);
+        }
+      });
+      button.setFillStyle(0x2266aa, 0.9);
+      callback();
+    });
+    
+    button.on('pointerup', () => {
+      button.setFillStyle(0x4488aa, 0.8);
+    });
     
     return button;
   }
@@ -238,15 +267,54 @@ export default class InputController {
     // Hover effects
     button.on('pointerover', () => {
       button.setFillStyle(0xff5555, 0.9);
-      text.setScale(1.15);
+      this.scene.tweens.add({
+        targets: text,
+        scale: 1.15,
+        duration: 150,
+        ease: 'Quad.easeOut'
+      });
     });
     
     button.on('pointerout', () => {
       button.setFillStyle(0xcc3333, 0.8);
-      text.setScale(1);
+      this.scene.tweens.add({
+        targets: text,
+        scale: 1,
+        duration: 150,
+        ease: 'Quad.easeOut'
+      });
     });
     
-    button.on('pointerdown', callback);
+    // Press animation - scale down, pulse effect, and glow
+    button.on('pointerdown', () => {
+      // Scale animation (press effect)
+      this.scene.tweens.add({
+        targets: button,
+        scaleX: 0.80,
+        scaleY: 0.80,
+        duration: 100,
+        ease: 'Quad.easeIn',
+        yoyo: true,
+        onComplete: () => {
+          button.setScale(1);
+        }
+      });
+      
+      // Glow effect with alpha pulse
+      this.scene.tweens.add({
+        targets: button,
+        alpha: 1,
+        duration: 100,
+        ease: 'Quad.easeOut'
+      });
+      
+      button.setFillStyle(0xff2222, 0.95);
+      callback();
+    });
+    
+    button.on('pointerup', () => {
+      button.setFillStyle(0xcc3333, 0.8);
+    });
     
     return button;
   }
