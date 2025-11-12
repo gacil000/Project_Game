@@ -86,71 +86,70 @@ export default class PreloadScene extends Phaser.Scene {
   create() {
     // Generate placeholder spritesheets for testing
     // Will be replaced with real assets later
-    SpriteGenerator.initializePlaceholderSprites(this);
-    
-    // Create basic animations if spritesheets are available
-    const hasCharsTexture = this.textures.exists('chars');
-    
-    if (!hasCharsTexture) {
-      console.warn('chars spritesheet not loaded, using procedural sprites');
+    try {
+      SpriteGenerator.initializePlaceholderSprites(this);
+      console.log('✓ Placeholder sprites generated successfully');
+    } catch (e) {
+      console.error('Error generating sprites:', e);
     }
     
+    // Create basic animations
     try {
-      // Create animations for placeholder sprites
-      // For each character/enemy with 4 columns x 3 rows (12 frames)
-      
-      // Idle animations (frame 0)
+      // Use elf_bladedancer as default player sprite for animations
+      // Idle animations (single frame each)
       this.anims.create({ 
         key: 'player_idle_down', 
-        frames: [{ key: 'chars', frame: 0 }], 
+        frames: [{ key: 'elf_bladedancer', frame: 0 }], 
         frameRate: 1 
       });
       this.anims.create({ 
         key: 'player_idle_left', 
-        frames: [{ key: 'chars', frame: 1 }], 
+        frames: [{ key: 'elf_bladedancer', frame: 1 }], 
         frameRate: 1 
       });
       this.anims.create({ 
         key: 'player_idle_right', 
-        frames: [{ key: 'chars', frame: 2 }], 
+        frames: [{ key: 'elf_bladedancer', frame: 2 }], 
         frameRate: 1 
       });
       this.anims.create({ 
         key: 'player_idle_up', 
-        frames: [{ key: 'chars', frame: 3 }], 
+        frames: [{ key: 'elf_bladedancer', frame: 3 }], 
         frameRate: 1 
       });
       
-      // Walk animations (frames 4-7 for different directions)
+      // Walk animations (frames 4-7)
       this.anims.create({
         key: 'player_walk_down',
-        frames: this.anims.generateFrameNumbers('chars', { start: 4, end: 7 }),
+        frames: this.anims.generateFrameNumbers('elf_bladedancer', { start: 4, end: 7 }),
         frameRate: 8,
         repeat: -1
       });
       
       this.anims.create({
         key: 'player_walk_left',
-        frames: this.anims.generateFrameNumbers('chars', { start: 4, end: 7 }),
+        frames: this.anims.generateFrameNumbers('elf_bladedancer', { start: 4, end: 7 }),
         frameRate: 8,
         repeat: -1
       });
       
       this.anims.create({
         key: 'player_walk_right',
-        frames: this.anims.generateFrameNumbers('chars', { start: 4, end: 7 }),
+        frames: this.anims.generateFrameNumbers('elf_bladedancer', { start: 4, end: 7 }),
         frameRate: 8,
         repeat: -1
       });
       
       this.anims.create({
         key: 'player_walk_up',
-        frames: this.anims.generateFrameNumbers('chars', { start: 4, end: 7 }),
+        frames: this.anims.generateFrameNumbers('elf_bladedancer', { start: 4, end: 7 }),
         frameRate: 8,
         repeat: -1
       });
+      
+      console.log('✓ Animations created successfully');
     } catch (e) {
-      console.warn('Could not create animations:', e.message);
+      console.error('Could not create animations:', e.message);
     }
 
     // Proceed to home scene after a short delay so the progress bar is visible

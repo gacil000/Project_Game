@@ -240,3 +240,10 @@ export function initializePlaceholderSprites(scene) {
     generateEnemySpritesheet(scene, enemy.key, enemy.color);
   });
 }
+
+export default {
+  initializePlaceholderSprites,
+  generateCharacterSpritesheet,
+  generateEnemySpritesheet
+};
+}
