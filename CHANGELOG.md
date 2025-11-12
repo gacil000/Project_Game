@@ -1,5 +1,26 @@
 # CHANGELOG
 
+## [0.3.1] - 2025-11-12 (Visual Improvements)
+
+### Added
+- Enhanced D-Pad button styling with visual hierarchy (blue color scheme, borders, gradient effects)
+- Attack button styling (red/circular, visual feedback, scaling on hover)
+- Button hover effects with color transitions and text scaling
+- Analog joystick control option as alternative to D-Pad
+- Joystick features: smooth stick movement, angle-based direction detection, boundary clamping
+- Joystick initialization parameter in InputController constructor
+
+### Changed
+- InputController methods: createDPadControls() and createJoystickControls() reorganized
+- Button creation refactored into separate methods: createDPadButton() and createAttackButton()
+- Improved visual depth layering for touch controls (depth 999-1001)
+- Better color scheme for mobile controls (blue for movement, red for attack)
+
+### Improved
+- Touch control visibility and usability on mobile
+- Button visual feedback during user interaction
+- Overall mobile UI polish and consistency
+
 ## [0.3.0] - 2025-11-12 (Mobile Support)
 
 ### Added
