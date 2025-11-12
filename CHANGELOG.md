@@ -1,5 +1,26 @@
 # CHANGELOG
 
+## [0.2.1] - 2025-11-12 (Testing & Fixes)
+
+### Fixed
+- **CRITICAL:** Fragment sprite uses fallback texture if 'icons' not loaded
+- **HIGH:** Enemy sprite frame validation (prevents out-of-bounds frame access)
+- **HIGH:** Animation creation checks for texture existence before creating animations
+- **HIGH:** Added max level cap (20) on upgrades to prevent stat overflow
+- **MINOR:** Fragment icon in UIScene now uses fallback if 'icons' missing
+- **MINOR:** Room generation validates roomSize is valid integer
+
+### Added
+- Texture validation checks throughout game
+- Animation existence checks before playing
+- Room size validation in generateRoom()
+- MAX_LEVEL constant (20) for upgrade system
+
+### Changed
+- Enemy spawn now safely handles missing 'chars' texture
+- Animations only play if they were successfully created
+- Upgrade purchase includes max level check
+
 ## [0.2.0] - 2025-11-12
 
 ### Fixed

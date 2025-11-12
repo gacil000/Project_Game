@@ -14,7 +14,9 @@ export default class UIScene extends Phaser.Scene {
       .setScale(1.5)
       .setScrollFactor(0);
     
-    const fragIcon = this.add.sprite(20, 60, 'icons', 4) // Fragment icon
+    // Use fallback if icons texture doesn't exist
+    const fragIconTexture = this.textures.exists('icons') ? 'icons' : 'box';
+    const fragIcon = this.add.sprite(20, 60, fragIconTexture, 4) // Fragment icon
       .setScale(1.5)
       .setScrollFactor(0);
     

@@ -83,6 +83,14 @@ export default class PreloadScene extends Phaser.Scene {
   }
   create() {
     // Create basic animations if spritesheets are available. Use try/catch like flow:
+    const hasCharsTexture = this.textures.exists('chars');
+    
+    if (!hasCharsTexture) {
+      console.warn('chars spritesheet not loaded, skipping animations');
+      this.time.delayedCall(300, () => this.scene.start('HomeScene'));
+      return;
+    }
+    
     try {
       // For the Antifarea character set:
       // Down walking animation

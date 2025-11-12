@@ -56,6 +56,16 @@ export default class HomeScene extends Phaser.Scene {
 
       btn.on('pointerdown', () => {
         const currentFrags = this.fragments;
+        const MAX_LEVEL = 20;
+        const currentLevel = this.upgrades[o.key] || 0;
+        
+        // Check if already at max level
+        if (currentLevel >= MAX_LEVEL) {
+          btnTxt.setStyle({ fill: '#ff8080' });
+          this.time.delayedCall(400, () => btnTxt.setStyle({ fill: '#fff' }));
+          return;
+        }
+        
         if (currentFrags >= o.cost) {
           this.fragments -= o.cost;
           this.upgrades[o.key] = (this.upgrades[o.key] || 0) + 1;

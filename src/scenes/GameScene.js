@@ -27,6 +27,12 @@ export default class GameScene extends Phaser.Scene {
   }
   
   generateRoom() {
+    // Validate room size
+    if (!Number.isInteger(this.roomSize) || this.roomSize < 5) {
+      console.warn('Invalid room size, using default 10');
+      this.roomSize = 10;
+    }
+    
     // Create a new room layout
     const room = [];
     for (let y = 0; y < this.roomSize; y++) {
@@ -195,14 +201,20 @@ export default class GameScene extends Phaser.Scene {
       // skip if too close
       if (Phaser.Math.Distance.Between(px, py, this.player.x, this.player.y) < this.displayTile * 2) continue;
 
-      const e = this.physics.add.sprite(px, py, 'chars', 48).setScale(this.scaleFactor);
+      // Use fallback if texture doesn't exist
+      const charTexture = this.textures.exists('chars') ? 'chars' : 'box';
+      const charFrame = this.textures.exists('chars') ? 48 : 0;
+      const e = this.physics.add.sprite(px, py, charTexture, charFrame).setScale(this.scaleFactor);
       e.body.setSize(14, 14);
       e.setCollideWorldBounds(true);
       // Balance: slightly tougher enemies
       e.stats = { hp: 4, atk: 2, def: 0 };
       e.nextMoveAt = 0;
       this.enemies.add(e);
-      e.play('player_idle_down');
+      // Only play animation if it exists
+      if (this.anims.exists('player_idle_down')) {
+        e.play('player_idle_down');
+      }
     }
   }
 
@@ -232,7 +244,9 @@ export default class GameScene extends Phaser.Scene {
   }
 
   createFragment(x, y) {
-    const frag = this.add.sprite(x, y, 'icons', 0).setScale(this.scaleFactor * 0.6);
+    // Use fallback texture if icons not loaded
+    const fragTexture = this.textures.exists('icons') ? 'icons' : 'box';
+    const frag = this.add.sprite(x, y, fragTexture, 0).setScale(this.scaleFactor * 0.6);
     this.physics.add.existing(frag);
     frag.body.setSize(10, 10);
     frag.body.setAllowGravity(false);
