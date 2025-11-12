@@ -59,12 +59,37 @@ export default class GameScene extends Phaser.Scene {
     // Create the room
     this.map = this.generateRoom();
     
+    // Helper function for safe audio playback
+    this.playSoundSafely = (preferredKey, fallbackKey) => {
+      if (!this.sound) return;
+      try {
+        if (this.cache?.audio?.exists(preferredKey)) {
+          this.sound.play(preferredKey);
+        } else if (this.cache?.audio?.exists(fallbackKey)) {
+          this.sound.play(fallbackKey);
+        }
+      } catch (e) {
+        console.warn('Audio playback error:', e.message);
+      }
+    };
+    
     // Create a dark overlay for the light effect
     const worldW = this.roomSize * this.displayTile;
     const worldH = this.roomSize * this.displayTile;
     
     // Create base layer for the room
     this.layer = this.add.layer();
+    
+    // Verify that textures exist before using them
+    const hasTilesTexture = this.textures.exists('tiles');
+    const hasCharsTexture = this.textures.exists('chars');
+    
+    if (!hasTilesTexture) {
+        console.warn('Warning: tiles texture not loaded, using fallback');
+    }
+    if (!hasCharsTexture) {
+        console.warn('Warning: chars texture not loaded, using fallback');
+    }
     
     // Draw the dungeon tiles
     for (let y = 0; y < this.roomSize; y++) {
@@ -73,7 +98,7 @@ export default class GameScene extends Phaser.Scene {
         const py = y * this.displayTile;
         
         // Use proper dungeon tiles
-        const tileSprite = this.add.sprite(px, py, 'tiles', this.map[y][x] ? 1 : 0)
+        const tileSprite = this.add.sprite(px, py, hasTilesTexture ? 'tiles' : 'box', this.map[y][x] ? 1 : 0)
           .setOrigin(0)
           .setScale(this.scaleFactor);
           
@@ -200,11 +225,8 @@ export default class GameScene extends Phaser.Scene {
       // award fragments collected this run
       const gained = Math.max(1, this.sessionFragments);
       localStorage.setItem(window.EOL.storageKey, String(current + gained));
-      // play death sfx (prefer Owlish UI if available)
-      if (this.sound) {
-        const key = (this.cache && this.cache.audio && this.cache.audio.exists && this.cache.audio.exists('owlish_tap')) ? 'owlish_tap' : 'sfx_switch';
-        this.sound.play(key);
-      }
+      // play death sfx with safe fallback
+      this.playSoundSafely('owlish_tap', 'sfx_switch');
       this.scene.start('HomeScene');
     });
   }
@@ -227,11 +249,8 @@ export default class GameScene extends Phaser.Scene {
     if (!frag || !frag.active) return;
     frag.destroy();
     this.sessionFragments += 1;
-    // play pickup sfx
-    if (this.sound) {
-      const key = (this.cache && this.cache.audio && this.cache.audio.exists && this.cache.audio.exists('owlish_tap')) ? 'owlish_tap' : 'sfx_tap';
-      this.sound.play(key);
-    }
+    // play pickup sfx with safe fallback
+    this.playSoundSafely('owlish_tap', 'sfx_tap');
     // update HUD (stored + session)
     const stored = parseInt(localStorage.getItem(window.EOL.storageKey) || '0', 10);
     this.events.emit('updateHUD', { fragments: stored + this.sessionFragments, health: this.player.stats.hp, maxHealth: this.player.stats.maxHp });
@@ -296,7 +315,7 @@ export default class GameScene extends Phaser.Scene {
     // Enemy AI: follow player when within 5 tiles, else idle
     const followRange = this.displayTile * 5;
     this.enemies.children.each((e) => {
-      if (!e.active) return;
+      if (!e.active || !e.body || !e.stats) return;
       const dist = Phaser.Math.Distance.Between(e.x, e.y, this.player.x, this.player.y);
       if (dist < followRange) {
         const angle = Phaser.Math.Angle.Between(e.x, e.y, this.player.x, this.player.y);
@@ -308,11 +327,8 @@ export default class GameScene extends Phaser.Scene {
 
     // Simple melee attack: press SPACE to hit nearby enemies
     if (Phaser.Input.Keyboard.JustDown(this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE))) {
-      // attack sfx - prefer owlish_hit if available
-      if (this.sound) {
-        const key = (this.cache && this.cache.audio && this.cache.audio.exists && this.cache.audio.exists('owlish_hit')) ? 'owlish_hit' : 'sfx_click';
-        this.sound.play(key);
-      }
+      // attack sfx with safe fallback
+      this.playSoundSafely('owlish_hit', 'sfx_click');
       this.enemies.children.each((e) => {
         if (!e.active) return;
         const d = Phaser.Math.Distance.Between(e.x, e.y, this.player.x, this.player.y);

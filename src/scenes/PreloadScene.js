@@ -29,11 +29,11 @@ export default class PreloadScene extends Phaser.Scene {
       spacing: 0
     });
     
-    // UI elements from Kenney UI Pack
-    this.load.image('button', 'assets/ui/PNG/blue_button00.png');
-    this.load.image('button_hover', 'assets/ui/PNG/blue_button01.png');
-    this.load.image('panel', 'assets/ui/PNG/grey_panel.png');
-    this.load.image('box', 'assets/ui/PNG/grey_box.png');
+    // UI elements from Kenney UI Pack (corrected paths)
+    this.load.image('button', 'assets/ui/PNG/Blue/Default/blue_button00.png');
+    this.load.image('button_hover', 'assets/ui/PNG/Blue/Default/blue_button01.png');
+    this.load.image('panel', 'assets/ui/PNG/Grey/Default/grey_panel.png');
+    this.load.image('box', 'assets/ui/PNG/Grey/Default/grey_box.png');
     
     // Load icons (use a consumables sheet from the icons folder - adjust if you prefer another file)
     this.load.spritesheet('icons', 'assets/icons/consumables.png', { 

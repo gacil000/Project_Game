@@ -43,9 +43,19 @@ export default class AssetLoader {
     }
     
     static createFallbackAudio(scene, key) {
-        // Create a silent audio buffer
-        const ctx = new AudioContext();
-        const buffer = ctx.createBuffer(1, 44100, 44100);
-        return buffer;
+        // Create a silent audio buffer with proper browser compatibility
+        try {
+            const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+            if (!AudioContextClass) {
+                console.warn('AudioContext not supported in this browser for fallback', key);
+                return null;
+            }
+            const ctx = new AudioContextClass();
+            const buffer = ctx.createBuffer(1, 44100, 44100);
+            return buffer;
+        } catch (e) {
+            console.warn('Failed to create audio fallback for', key, ':', e.message);
+            return null;
+        }
     }
 }

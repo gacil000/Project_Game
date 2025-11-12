@@ -3,6 +3,7 @@ import PreloadScene from './scenes/PreloadScene.js';
 import HomeScene from './scenes/HomeScene.js';
 import GameScene from './scenes/GameScene.js';
 import UIScene from './scenes/UIScene.js';
+import ErrorScene from './scenes/ErrorScene.js';
 
 const config = {
   type: Phaser.AUTO,
