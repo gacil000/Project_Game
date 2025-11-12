@@ -1,3 +1,5 @@
+import InputController from '../systems/InputController.js';
+
 export default class GameScene extends Phaser.Scene {
   constructor() {
     super('GameScene');
@@ -168,8 +170,8 @@ export default class GameScene extends Phaser.Scene {
     // camera follow
     this.cameras.main.startFollow(this.player, true, 0.08, 0.08);
 
-    // input
-    this.cursors = this.input.keyboard.createCursorKeys();
+    // input - use universal InputController
+    this.inputController = new InputController(this);
 
     // score/time
     this.score = 0;
@@ -276,6 +278,10 @@ export default class GameScene extends Phaser.Scene {
     // Performance optimization: Skip update if game is paused
     if (this.scene.isPaused()) return;
     
+    // Update input controller
+    this.inputController.update();
+    const input = this.inputController.getMovement();
+    
     // player movement
     const speed = this.player.speed;
     const body = this.player.body;
@@ -285,30 +291,30 @@ export default class GameScene extends Phaser.Scene {
     let isMoving = false;
     
     // Handle movement and animations
-    if (this.cursors.left.isDown) {
+    if (input.left) {
       body.setVelocityX(-speed);
       this.player.play('player_walk_left', true);
       this.player.facing = 'left';
       isMoving = true;
     } 
-    else if (this.cursors.right.isDown) {
+    else if (input.right) {
       body.setVelocityX(speed);
       this.player.play('player_walk_right', true);
       this.player.facing = 'right';
       isMoving = true;
     }
     
-    if (this.cursors.up.isDown) {
+    if (input.up) {
       body.setVelocityY(-speed);
-      if (!this.cursors.left.isDown && !this.cursors.right.isDown) {
+      if (!input.left && !input.right) {
         this.player.play('player_walk_up', true);
         this.player.facing = 'up';
       }
       isMoving = true;
     }
-    else if (this.cursors.down.isDown) {
+    else if (input.down) {
       body.setVelocityY(speed);
-      if (!this.cursors.left.isDown && !this.cursors.right.isDown) {
+      if (!input.left && !input.right) {
         this.player.play('player_walk_down', true);
         this.player.facing = 'down';
       }
@@ -340,7 +346,8 @@ export default class GameScene extends Phaser.Scene {
     });
 
     // Simple melee attack: press SPACE to hit nearby enemies
-    if (Phaser.Input.Keyboard.JustDown(this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE))) {
+    // Handle attack with input controller (works on desktop and mobile)
+    if (this.inputController.isAttacking()) {
       // attack sfx with safe fallback
       this.playSoundSafely('owlish_hit', 'sfx_click');
       this.enemies.children.each((e) => {

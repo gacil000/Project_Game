@@ -1,5 +1,20 @@
 # CHANGELOG
 
+## [0.3.0] - 2025-11-12 (Mobile Support)
+
+### Added
+- Mobile input controller system (InputController.js)
+- Virtual D-Pad controls for mobile (UP, DOWN, LEFT, RIGHT buttons)
+- On-screen attack button for mobile
+- Mobile device detection
+- Responsive touch controls
+
+### Changed
+- Input handling now abstracted through InputController
+
+### Docs
+- Added MOBILE_REPORT.md with detailed compatibility analysis
+
 ## [0.2.1] - 2025-11-12 (Testing & Fixes)
 
 ### Fixed
