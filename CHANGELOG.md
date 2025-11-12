@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## [0.3.1] - 2025-11-12 (Visual Improvements)
+## [0.3.1] - 2025-11-12 (Visual Improvements & Polish)
 
 ### Added
 - Enhanced D-Pad button styling with visual hierarchy (blue color scheme, borders, gradient effects)
@@ -9,17 +9,30 @@
 - Analog joystick control option as alternative to D-Pad
 - Joystick features: smooth stick movement, angle-based direction detection, boundary clamping
 - Joystick initialization parameter in InputController constructor
+- **NEW:** Button press animations with smooth tweens
+  - D-Pad: Scale animation (0.85x) + color change on press
+  - Attack button: Enhanced scale animation (0.80x, yoyo) + pulse glow effect
+  - Text scaling on hover with Quad.easeOut easing
 
 ### Changed
 - InputController methods: createDPadControls() and createJoystickControls() reorganized
 - Button creation refactored into separate methods: createDPadButton() and createAttackButton()
 - Improved visual depth layering for touch controls (depth 999-1001)
 - Better color scheme for mobile controls (blue for movement, red for attack)
+- Button event handling: added smooth tween animations for all transitions
 
 ### Improved
 - Touch control visibility and usability on mobile
 - Button visual feedback during user interaction
 - Overall mobile UI polish and consistency
+- Tactile feel with animations (60 FPS smooth)
+
+### Testing
+- ✅ Visual improvements verified on desktop and mobile browsers
+- ✅ All button animations working smoothly
+- ✅ Joystick control functional and responsive
+- ✅ No performance issues with animations at 60 FPS
+- ✅ Touch responsiveness maintained
 
 ## [0.3.0] - 2025-11-12 (Mobile Support)
 
