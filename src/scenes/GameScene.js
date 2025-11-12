@@ -90,13 +90,13 @@ export default class GameScene extends Phaser.Scene {
     
     // Verify that textures exist before using them
     const hasTilesTexture = this.textures.exists('tiles');
-    const hasPlayerTexture = this.textures.exists('elf_bladedancer');
+    const hasCharsTexture = this.textures.exists('chars');
     
     if (!hasTilesTexture) {
         console.warn('Warning: tiles texture not loaded, using fallback');
     }
-    if (!hasPlayerTexture) {
-        console.warn('Warning: player sprites not loaded, using fallback');
+    if (!hasCharsTexture) {
+        console.warn('Warning: chars texture not loaded, using fallback');
     }
     
     // Draw the dungeon tiles
@@ -136,7 +136,7 @@ export default class GameScene extends Phaser.Scene {
   const spawnX = Math.floor(this.roomSize/2) * this.displayTile + this.displayTile/2;
   const spawnY = Math.floor(this.roomSize/2) * this.displayTile + this.displayTile/2;
 
-  this.player = this.physics.add.sprite(spawnX, spawnY, 'elf_bladedancer', 0).setScale(this.scaleFactor);
+  this.player = this.physics.add.sprite(spawnX, spawnY, 'chars', 0).setScale(this.scaleFactor);
   this.player.body.setSize(14, 14);
   this.player.facing = 'down';
   this.player.speed = 80 + ((this.upgrades && this.upgrades.speed) ? this.upgrades.speed * 8 : 0);
@@ -196,10 +196,6 @@ export default class GameScene extends Phaser.Scene {
       }
     }
     Phaser.Utils.Array.Shuffle(floorPositions);
-    
-    // Enemy sprite types available (4 types cycling)
-    const enemyTypes = ['ochre_jelly', 'death_slime', 'blinded_grimlock', 'fungal_myconid'];
-    
     for (let i = 0; i < Math.min(n, floorPositions.length); i++) {
       const tile = floorPositions[i];
       const px = tile.x * this.displayTile + this.displayTile / 2;
@@ -207,10 +203,10 @@ export default class GameScene extends Phaser.Scene {
       // skip if too close
       if (Phaser.Math.Distance.Between(px, py, this.player.x, this.player.y) < this.displayTile * 2) continue;
 
-      // Use cycling enemy type, fallback to 'box' if sprite not loaded
-      const enemyType = enemyTypes[i % enemyTypes.length];
-      const charTexture = this.textures.exists(enemyType) ? enemyType : 'box';
-      const e = this.physics.add.sprite(px, py, charTexture, 0).setScale(this.scaleFactor);
+      // Use fallback if texture doesn't exist
+      const charTexture = this.textures.exists('chars') ? 'chars' : 'box';
+      const charFrame = this.textures.exists('chars') ? 48 : 0;
+      const e = this.physics.add.sprite(px, py, charTexture, charFrame).setScale(this.scaleFactor);
       e.body.setSize(14, 14);
       e.setCollideWorldBounds(true);
       // Balance: slightly tougher enemies
