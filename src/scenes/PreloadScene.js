@@ -1,3 +1,5 @@
+import SpriteGenerator from '../utils/SpriteGenerator.js';
+
 export default class PreloadScene extends Phaser.Scene {
   constructor() {
     super('PreloadScene');
@@ -82,26 +84,51 @@ export default class PreloadScene extends Phaser.Scene {
     });
   }
   create() {
-    // Create basic animations if spritesheets are available. Use try/catch like flow:
+    // Generate placeholder spritesheets for testing
+    // Will be replaced with real assets later
+    SpriteGenerator.initializePlaceholderSprites(this);
+    
+    // Create basic animations if spritesheets are available
     const hasCharsTexture = this.textures.exists('chars');
     
     if (!hasCharsTexture) {
-      console.warn('chars spritesheet not loaded, skipping animations');
-      this.time.delayedCall(300, () => this.scene.start('HomeScene'));
-      return;
+      console.warn('chars spritesheet not loaded, using procedural sprites');
     }
     
     try {
-      // For the Antifarea character set:
-      // Down walking animation
+      // Create animations for placeholder sprites
+      // For each character/enemy with 4 columns x 3 rows (12 frames)
+      
+      // Idle animations (frame 0)
       this.anims.create({ 
+        key: 'player_idle_down', 
+        frames: [{ key: 'chars', frame: 0 }], 
+        frameRate: 1 
+      });
+      this.anims.create({ 
+        key: 'player_idle_left', 
+        frames: [{ key: 'chars', frame: 1 }], 
+        frameRate: 1 
+      });
+      this.anims.create({ 
+        key: 'player_idle_right', 
+        frames: [{ key: 'chars', frame: 2 }], 
+        frameRate: 1 
+      });
+      this.anims.create({ 
+        key: 'player_idle_up', 
+        frames: [{ key: 'chars', frame: 3 }], 
+        frameRate: 1 
+      });
+      
+      // Walk animations (frames 4-7 for different directions)
+      this.anims.create({
         key: 'player_walk_down',
-        frames: this.anims.generateFrameNumbers('chars', { start: 0, end: 3 }),
+        frames: this.anims.generateFrameNumbers('chars', { start: 4, end: 7 }),
         frameRate: 8,
         repeat: -1
       });
       
-      // Left walking animation
       this.anims.create({
         key: 'player_walk_left',
         frames: this.anims.generateFrameNumbers('chars', { start: 4, end: 7 }),
@@ -109,33 +136,24 @@ export default class PreloadScene extends Phaser.Scene {
         repeat: -1
       });
       
-      // Right walking animation
       this.anims.create({
         key: 'player_walk_right',
-        frames: this.anims.generateFrameNumbers('chars', { start: 8, end: 11 }),
+        frames: this.anims.generateFrameNumbers('chars', { start: 4, end: 7 }),
         frameRate: 8,
         repeat: -1
       });
       
-      // Up walking animation
       this.anims.create({
         key: 'player_walk_up',
-        frames: this.anims.generateFrameNumbers('chars', { start: 12, end: 15 }),
+        frames: this.anims.generateFrameNumbers('chars', { start: 4, end: 7 }),
         frameRate: 8,
         repeat: -1
       });
-      
-      // Idle animations for each direction
-      this.anims.create({ key: 'player_idle_down', frames: [{ key: 'chars', frame: 0 }], frameRate: 1 });
-      this.anims.create({ key: 'player_idle_left', frames: [{ key: 'chars', frame: 4 }], frameRate: 1 });
-      this.anims.create({ key: 'player_idle_right', frames: [{ key: 'chars', frame: 8 }], frameRate: 1 });
-      this.anims.create({ key: 'player_idle_up', frames: [{ key: 'chars', frame: 12 }], frameRate: 1 });
     } catch (e) {
-      // If animations fail because spritesheet missing, ignore — game will use simple shapes
-      // console.warn('Could not create animations (missing spritesheet)', e);
+      console.warn('Could not create animations:', e.message);
     }
 
-    // proceed to home scene after a short delay so the progress bar is visible
+    // Proceed to home scene after a short delay so the progress bar is visible
     this.time.delayedCall(300, () => this.scene.start('HomeScene'));
   }
 }
